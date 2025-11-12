@@ -3,9 +3,14 @@
 
 export const config = {
   version: 'v3.0.0',
-  releaseDate: '2025.10.09',
+  releaseDate: '2025.10.24',
   copyright: 'Copyright 2021-2025 Kanagawa Institute of Technology',
-  serverUrl: 'https://webapiechonet.com/elapi/v1',
+  servers: [
+    { url: 'https://webapiechonet.com/elapi/v1', apiKeyType: 'X-Elapi-key' },
+    { url: 'https://dev.webapiechonet.com/elapi/v1', apiKeyType: 'X-Elapi-key' },
+    { url: 'https://www.smarthouse-center.org/elapi/v1', apiKeyType: 'Authorization' },
+  ],
+  // serverUrl: 'https://webapiechonet.com/elapi/v1',
   // serverUrl2: 'https://www.smarthouse-center.org/elapi/v1',
   // コンソ限定バージョン（実証システム関連を非表示）の場合は true とする
   // forConsortium: true,

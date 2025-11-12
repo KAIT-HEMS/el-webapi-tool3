@@ -11,9 +11,9 @@
           <div class="col-auto h5 mt-2">Send Request</div>
           <div class="col-auto"></div>
           <!-- Display server URL -->
-          <div class="col-auto mt-2">{{ serverUrl }}{{ url }}</div>
+          <div class="col-auto mt-2">{{ serverUrl }}</div>
           <!-- Connect web socket ボタン for 実証システム-->
-          <template v-if="serverUrl !== 'https://webapiechonet.com/elapi/v1'">
+          <template v-if="serverUrl === 'https://www.smarthouse-center.org/elapi/v1'">
             <div class="col-auto mt-1 pl-0">
               <button
                 type="button"
@@ -25,8 +25,17 @@
                 Connect web socket
               </button>
               <a class="btn" title="Web Socket Is Connected">
-                <font-awesome-icon v-if="webSocketIsConnected" icon="link" style="color: #000000" />
+                <i
+                  v-if="webSocketIsConnected"
+                  class="bi bi-link"
+                  icon="link"
+                  style="color: #000000"
+                ></i>
               </a>
+
+              <!-- <a v-if="webSocketIsConnected" class="btn" title="Home">
+                <i class="bi bi-house" style="color: #000000"></i>
+              </a> -->
             </div>
           </template>
           <div class="col"></div>
@@ -180,10 +189,12 @@
 </template>
 
 <script setup>
+// localStorage: serverUrl, apiKeyType, apiKey, apiKey0, apiKey1, apiKey2, serverSelection(選択中のserver 0,1,2, )
 import { ref } from 'vue'
-import { config } from '../config'
+// import { config } from '../config'
 import { onMounted } from 'vue'
-
+// import { useSetupDataStore } from '@/stores/setupData'
+// const setupDataStore = useSetupDataStore()
 import { useReqresStore } from '@/stores/reqres'
 const reqresStore = useReqresStore()
 import { useLogStore } from '@/stores/log'
@@ -211,21 +222,22 @@ let g_thingInfo = {} // { [key: string]: ThingInfo }
 const methodList = ref(['GET', 'PUT', 'POST', 'DELETE'])
 const methodSelected = ref('GET')
 const serviceList = ref(['']) // [/devices, /groups]
-const serviceSelected = ref('')
+const serviceSelected = ref('') // /devices
 const idInfoList = ref([]) // [{deviceType:"/aircon", id:"0123"},... ] GET /devices, groups, bulk, histories のレスポンスを利用
 const idSelected = ref('')
 const idToolTip = ref('tool tip')
 const deviceType = ref('')
-const resourceTypeList = ref([]) // [/properties, /actions]
-const resourceTypeSelected = ref('')
+const resourceTypeList = ref(['']) // [/properties, /actions]
+const resourceTypeSelected = ref('') // /properties
 const resourceNameList = ref(['']) // [/airFlowLevel, /roomTemperature,...]
-const resourceNameSelected = ref('')
+const resourceNameSelected = ref('') //  /airFlowLevel
 const query = ref('')
 const body = ref('')
 
-const serverUrl = ref(config.serverUrl)
-const apiKey = ref(localStorage.getItem('apiKey') ?? '')
-console.log('apikey: ', apiKey.value)
+const serverUrl = ref(localStorage.getItem('serverUrl') ?? '')
+let apiKey = localStorage.getItem('apiKey') ?? 'initial key'
+let apiKeyType = localStorage.getItem('apiKeyType') ?? 'initial keyType'
+console.log('init: serverUrl', serverUrl.value, 'apiKey: ', apiKey, 'apiKeyType', apiKeyType)
 // const request = ref('')
 // const statusCode = ref('')
 const response = ref('')
@@ -255,18 +267,30 @@ const sendButtonIsClicked = () => {
   }
   const url = serverUrl.value + path
   console.log('method: sendButtonIsClicked', { url })
-  console.log('reqresStore: ', reqresStore.request, reqresStore.statusCode, reqresStore.response)
+  // console.log('reqresStore: ', reqresStore.request, reqresStore.statusCode, reqresStore.response)
   const headers = new Headers({
     'Content-Type': 'application/json',
   })
-  // console.log('serverUrl: ', serverUrl.value, 'apikey: ', apiKey.value)
-  if (serverUrl.value == 'https://webapiechonet.com/elapi/v1') {
-    console.log('X-Elapi-key', apiKey.value)
-    headers.append('X-Elapi-key', apiKey.value)
+  console.log('url: ', url, 'apikey: ', apiKey, 'apiKeyType: ', apiKeyType)
+
+  // if (serverUrl.value == 'https://webapiechonet.com/elapi/v1') {
+  //   console.log('X-Elapi-key', apiKey)
+  //   headers.append('X-Elapi-key', apiKey)
+  // } else {
+  //   // console.log('Authorization', apiKey)
+  //   headers.append('Authorization', 'Bearer ' + apiKey)
+  // }
+
+  if (apiKeyType == 'X-Elapi-key') {
+    console.log('X-Elapi-key', apiKey)
+    headers.append('X-Elapi-key', apiKey)
+  } else if (apiKeyType == 'Authorization') {
+    // console.log('Authorization', apiKey)
+    headers.append('Authorization', 'Bearer ' + apiKey)
   } else {
-    // console.log('Authorization', apiKey.value)
-    headers.append('Authorization', 'Bearer ' + apiKey.value)
+    console.log('apiKeyType is wrong!', apiKeyType)
   }
+
   let option = {
     method: methodSelected.value,
     headers: headers,
@@ -471,24 +495,24 @@ const sendButtonIsClicked = () => {
           console.log({ thingId }, { thingInfo }, { g_thingInfo })
 
           // resourceTypeListを新規に作成する
-          let resourceTypeList = ['']
+          let rtl = ['']
           if (data.properties !== undefined) {
-            resourceTypeList.push('/properties')
+            rtl.push('/properties')
           }
           if (data.actions !== undefined) {
-            resourceTypeList.push('/actions')
+            rtl.push('/actions')
           }
           if (data.events !== undefined) {
-            resourceTypeList.push('/events')
+            rtl.push('/events')
           }
-          resourceTypeList.value = resourceTypeList
-          console.log('resourceTypeListの更新:', { resourceTypeList })
+          resourceTypeList.value = rtl
+          console.log('resourceTypeListの更新:', { rtl })
 
           // 入力フィールドResouce TypeとResource Nameの表示項目の更新
           const urn = updateResourceName('GET', thingId, '/properties')
           resourceNameSelected.value = urn[0]
           resourceNameList.value = urn[1]
-          resourceTypeSelected.value = resourceTypeList[1] ? resourceTypeList[1] : ''
+          resourceTypeSelected.value = rtl[1] ? rtl[1] : ''
           // 入力フィールドidの下のdeviceTypeの更新
           deviceType.value = data.deviceType
         }
@@ -503,7 +527,7 @@ const sendButtonIsClicked = () => {
 const connectButtonIsClicked = () => {
   console.log('Connect Web Socket button is clicked')
   const url = 'wss://www.smarthouse-center.org/ws/elapi'
-  const ws = new WebSocket(url, ['echonetlite-protocol', apiKey.value])
+  const ws = new WebSocket(url, ['echonetlite-protocol', apiKey])
 
   ws.addEventListener('open', () => {
     console.log('WebSocket が接続されました。')
@@ -629,8 +653,11 @@ const resourceNameIsUpdated = () => {
 }
 
 onMounted(() => {
-  console.log('HomeSendRequest is created')
-  console.log('serverUrl:', serverUrl.value, 'apiKey:', apiKey.value)
+  console.log('HomeSendRequest.vue onMounted')
+  serverUrl.value = localStorage.getItem('serverUrl') ?? ''
+  apiKey = localStorage.getItem('apiKey') ?? ''
+  apiKeyType = localStorage.getItem('apiKeyType') ?? ''
+  console.log('serverUrl', serverUrl.value, 'apiKey: ', apiKey, 'apiKeyType', apiKeyType)
 })
 
 // export default defineComponent({
@@ -1150,12 +1177,6 @@ onMounted(() => {
 //       console.log("resourceNameIsUpdated");
 //     },
 //   },
-
-onMounted(() => {
-  console.log('HomeSendRequest is created')
-  // apiKey.value = ref(localStorage.getItem('apiKey') ?? '')
-  console.log('serverUrl:', serverUrl.value, 'apiKey:', apiKey.value)
-})
 
 // input: deviceId <string>
 // output: <string>
