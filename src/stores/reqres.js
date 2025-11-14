@@ -4,9 +4,9 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useReqresStore = defineStore('reqres', () => {
-  const request = ref('Request:')
-  const statusCode = ref('Response: status code')
-  const response = ref('Response: data')
+  const request = ref('REQ:')
+  const statusCode = ref('status code')
+  const response = ref('RES: data')
 
   return { request, statusCode, response }
 })

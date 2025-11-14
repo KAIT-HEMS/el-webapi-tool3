@@ -12,7 +12,7 @@
 
 <script setup>
 import SettingServerAndDevice from '../components/SettingServerAndDevice.vue'
-console.log('SettingView init')
+console.log('SettingView.vue init')
 </script>
 
 <style scoped>

@@ -112,6 +112,6 @@
 <script setup>
 import { config } from '../config'
 
-console.log('AboutView init')
+console.log('AboutView.vue init')
 const forConsortium = config.forConsortium
 </script>

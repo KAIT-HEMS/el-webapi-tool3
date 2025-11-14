@@ -14,11 +14,11 @@
 </template>
 
 <script setup>
-import HomeSendRequest from '../components/HomeSendRequest.vue' // @ is an alias to /src
-import HomeRequestResponse from '../components/HomeRequestResponse.vue' // @ is an alias to /src
-import HomeNotification from '../components/HomeNotification.vue' // @ is an alias to /src
-import HomeLog from '../components/HomeLog.vue' // @ is an alias to /src
-console.log('HomeView init')
+import HomeSendRequest from '../components/HomeSendRequest.vue'
+import HomeRequestResponse from '../components/HomeRequestResponse.vue'
+import HomeNotification from '../components/HomeNotification.vue'
+import HomeLog from '../components/HomeLog.vue'
+console.log('HomeView.vue init')
 </script>
 
 <style scoped>

@@ -25,7 +25,7 @@
         <div id="request-response-wrapper">
           <ul class="list-group" id="request-response-list">
             <li class="list-group-item">{{ reqresStore.request }}</li>
-            <li class="list-group-item">{{ reqresStore.statusCode }}</li>
+            <li class="list-group-item">RES: {{ reqresStore.statusCode }}</li>
             <li class="list-group-item d-flex align-items-start">
               <span>
                 <pre>{{ reqresStore.response }}</pre>

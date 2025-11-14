@@ -83,7 +83,7 @@
                 {{ message.data }} {{ message.body }}
               </span>
               <span v-else class="col3"
-                >status code: {{ message.statusCode }}
+                >{{ message.statusCode }}
                 <pre>{{ message.data }}</pre>
               </span>
             </li>
@@ -98,8 +98,6 @@
 import { ref } from 'vue'
 import { onMounted } from 'vue'
 import { useLogStore } from '@/stores/log'
-
-// import { defineComponent } from 'vue'
 import { config } from '../config'
 
 console.log('HomeLog init')

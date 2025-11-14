@@ -303,8 +303,7 @@ const deleteDeviceButtonIsClicked = (index) => {
   fetch(url, option)
     .then((response) => {
       console.log('Delete: response.status', response.status)
-      const target = { id: 'btnDelete' }
-      const event = { target: target }
+      const event = { target: { id: 'btnDelete' } }
       updateButtonIsClicked(event)
     })
     .catch((error) => {
@@ -343,8 +342,7 @@ const addDeviceButtonIsClicked = () => {
     .then((response) => response.json())
     .then((data) => {
       console.log('Add Success:', data)
-      const target = { id: 'btnAdd' }
-      const event = { target: target }
+      const event = { target: { id: 'btnAdd' } }
       updateButtonIsClicked(event)
     })
     .catch((error) => {
