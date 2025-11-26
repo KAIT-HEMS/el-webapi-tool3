@@ -1,0 +1,6 @@
+ELWebAPITool3 Release Note
+
+Release note
+V 1.0.0 2025.11.26 初版リリース
+- 実証システム（www.smarthouse-center.org）を選択した場合に home pageに表示される「Connect web socket」ボタンは、未実装です。今後対応予定です。
+
