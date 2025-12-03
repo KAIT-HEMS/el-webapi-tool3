@@ -192,6 +192,7 @@ const reqresStore = useReqresStore()
 import { useLogStore } from '@/stores/log'
 const logStore = useLogStore()
 console.log('HomeSendRequest.vue init')
+console.log('serverSelection: ', localStorage.getItem('serverSelection'))
 
 let g_thingInfo = {} // { [key: string]: ThingInfo }
 

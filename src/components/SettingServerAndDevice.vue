@@ -210,7 +210,7 @@
 <script setup>
 // localStorage: serverUrl, apiKeyType, apiKey, apiKey0, apiKey1, apiKey2,
 // localStorage: serverSelection(選択中のserver '0','1','2')
-// sessionStorage: verify0, verify1, verify2
+// sessionStorage: verify0, verify1, verify2(connection status 'OK' or 'NG')
 import { ref } from 'vue'
 import { config } from '../config'
 import { onMounted, onBeforeUnmount } from 'vue'
@@ -221,6 +221,9 @@ const apiKey0 = ref(localStorage.getItem('apiKey0') ?? '')
 const apiKey1 = ref(localStorage.getItem('apiKey1') ?? '')
 const apiKey2 = ref(localStorage.getItem('apiKey2') ?? '')
 const serverSelection = ref(localStorage.getItem('serverSelection') ?? '0') // '0','1','2'
+if (serverSelection.value != '0' && serverSelection.value != '1' && serverSelection.value != '2') {
+  serverSelection.value = '0'
+}
 const serverUrl = ref(servers[parseInt(serverSelection.value)].url ?? 'xxx.xxx.xxx')
 const verify0 = ref('NG')
 const verify1 = ref('NG')
@@ -456,6 +459,7 @@ const updateButtonIsClicked = (event) => {
 // function: status を表示する
 onMounted(() => {
   console.log('Setting page, onMounted')
+  console.log('serverSelection: ', serverSelection.value)
   verify0.value = sessionStorage.getItem('verify0') ?? 'NG'
   verify1.value = sessionStorage.getItem('verify1') ?? 'NG'
   verify2.value = sessionStorage.getItem('verify2') ?? 'NG'
@@ -466,6 +470,7 @@ onMounted(() => {
 // verify0, verify1, verify2 を sessionStorage に set
 onBeforeUnmount(() => {
   console.log('Setting page, onBeforeUnmount')
+  console.log('serverSelection: ', serverSelection.value)
   const serverUrl = servers[parseInt(serverSelection.value)].url
   let apiKey = ''
   if (serverSelection.value == '0') {
