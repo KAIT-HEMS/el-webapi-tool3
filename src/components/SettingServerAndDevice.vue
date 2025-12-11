@@ -356,7 +356,7 @@ const addDeviceButtonIsClicked = () => {
 // 確認ボタンまたはUPDATEボタンがクリックされたときの method
 // deleteDeviceButtonIsClicked, addDeviceButtonIsClicked からも呼ばれる
 // input: event.target.id クリックされたボタンのid
-//   btnV0:確認0, btnV1:確認1, btnV2:確認３, btnUpdate:Update
+//   btnV0:確認0, btnV1:確認1, btnV2:確認2, btnUpdate:Update
 const updateButtonIsClicked = (event) => {
   console.log('updateButtonIsClicked, ', event.target.id)
   let btnNumber = 0
@@ -459,7 +459,6 @@ const updateButtonIsClicked = (event) => {
 // function: status を表示する
 onMounted(() => {
   console.log('Setting page, onMounted')
-  console.log('serverSelection: ', serverSelection.value)
   verify0.value = sessionStorage.getItem('verify0') ?? 'NG'
   verify1.value = sessionStorage.getItem('verify1') ?? 'NG'
   verify2.value = sessionStorage.getItem('verify2') ?? 'NG'
